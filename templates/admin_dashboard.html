@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Pannello Admin{% endblock %}
+
+{% block content %}
+
+
+<h1 class="text-center">🛠️ Pannello Admin</h1>
+<p class="text-center text-muted">
+  gestione FFA
+</p>
+
+
+
+<!-- AZIONI PRINCIPALI -->
+<section class="mt-4">
+  <div class="admin-grid">
+
+    <div class="card">
+      <h3>🏆 Concorso</h3>
+      <p>Gestione risultati ufficiali.</p>
+
+      <a href="{{ url_for('admin_results') }}" class="btn btn-primary">
+        Inserisci risultati ufficiali
+      </a>
+    </div>
+
+    <div class="card">
+      <h3>📊 Classifica</h3>
+      <p>Visualizzazione punteggi.</p>
+
+      <a href="{{ url_for('ranking') }}" class="btn btn-primary">
+        Vai alla classifica
+      </a>
+    </div>
+
+
+    <div class="card">
+      <h3>💬 Messaggi</h3>
+      <p>Visualizza e gestisci i messaggi.</p>
+
+      <a href="{{ url_for('messages') }}" class="btn btn-primary">
+        Vai ai messaggi
+      </a>
+    </div>
+
+
+  </div>
+</section>
+
+<!-- UTENTI -->
+<section class="mt-4">
+  <div class="card">
+    <h3 class="text-center">👥 Utenti registrati</h3>
+
+    <div class="table-wrapper">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Ruolo</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr class="{% if u.role == 'admin' %}row-admin{% endif %}">
+            <td>{{ u.username }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.role }}</td>
+            <td class="actions">
+              <a href="{{ url_for('score_detail', user_id=u.id) }}" class="btn btn-secondary btn-sm">
+                📊 Dettagli
+              </a>
+              <a href="{{ url_for('admin_edit_user', user_id=u.id) }}" class="btn btn-primary btn-sm">
+                ✏️ Modifica
+              </a>
+              <a href="{{ url_for('delete_user', user_id=u.id) }}"
+                 class="btn btn-danger btn-sm"
+                 onclick="return confirm('Sei sicuro di voler cancellare {{ u.username }}?');">
+                🗑️ Cancella
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <a href="{{ url_for('admin_export') }}" class="btn btn-secondary mt-3">
+      📤 Esporta classifica (Excel)
+    </a>
+  </div>
+</section>
+
+{% endblock %}

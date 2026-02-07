@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}Classifica generale{% endblock %}
+{% block content %}
+
+<!-- BACK LINK CONDIZIONALE -->
+{% if current_user and current_user.role == "admin" %}
+  <a href="{{ url_for('admin_dashboard') }}" class="back-link">
+    ← Ritorna al pannello admin
+  </a>
+{% else %}
+  <a href="{{ url_for('dashboard') }}" class="back-link">
+    ← Ritorna alla dashboard
+  </a>
+{% endif %}
+
+<style>
+.rank-card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.rank-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0,0,0,.12);
+}
+
+.rank-card.me {
+  background: #eef5ff;
+  border: 1px solid #c7ddff;
+}
+
+.rank-pos {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+.rank-card.gold .rank-pos {
+  background: linear-gradient(135deg, #ffd43b, #ffbf00);
+}
+.rank-card.silver .rank-pos {
+  background: linear-gradient(135deg, #dee2e6, #adb5bd);
+}
+.rank-card.bronze .rank-pos {
+  background: linear-gradient(135deg, #e6b58c, #c9975b);
+}
+
+.rank-avatar,
+.rank-avatar-fallback {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.rank-avatar {
+  border: 2px solid #dee2e6;
+}
+
+.rank-avatar-fallback {
+  background: #ffc107;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.rank-card.me .rank-avatar,
+.rank-card.me .rank-avatar-fallback {
+  border-color: #0d6efd;
+}
+
+.rank-name {
+  flex-grow: 1;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.rank-name a {
+  text-decoration: none;
+  color: var(--text);
+}
+
+.rank-name a:hover {
+  color: var(--primary);
+}
+
+.rank-me {
+  font-size: 0.75rem;
+  margin-left: 6px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+
+.rank-score {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  min-width: 60px;
+  text-align: right;
+}
+</style>
+
+<h2 class="mb-4 text-center">🏆🤑 Classifica FFA 2026 🤑🏆</h2>
+
+{% for row in ranking %}
+<div class="rank-card
+  {% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}
+  {% if current_user and current_user.role != "admin" and row.user.id == current_user.id %}me{% endif %}
+">
+
+  <div class="rank-pos">{{ loop.index }}</div>
+
+  <!-- AVATAR -->
+  {% if row.user.avatar %}
+    <img
+      src="{{ url_for('static', filename='avatars/' ~ row.user.avatar) }}"
+      class="rank-avatar"
+      alt="Avatar"
+    >
+  {% else %}
+    <div class="rank-avatar-fallback">
+      {{ row.user.username[0]|upper }}
+    </div>
+  {% endif %}
+
+  <div class="rank-name">
+    <a href="{{ url_for('score_detail', user_id=row.user.id) }}">
+      {{ row.user.username }}
+    </a>
+    {% if current_user and current_user.role != "admin" and row.user.id == current_user.id %}
+      <span class="rank-me">tu</span>
+    {% endif %}
+  </div>
+
+  <div class="rank-score">
+    {{ "%.1f"|format(row.total) }}
+  </div>
+
+</div>
+{% endfor %}
+
+{% endblock %}
+

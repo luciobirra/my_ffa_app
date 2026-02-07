@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}La tua previsione{% endblock %}
+{% block content %}
+
+<!-- BACK TO DASHBOARD -->
+<a href="{{ url_for('dashboard') }}" class="back-link">
+  ← Ritorna alla dashboard
+</a>
+
+<style>
+.ranking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: repeat(10, auto);
+  grid-auto-flow: column;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .ranking-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+  }
+}
+
+.rank-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  cursor: grab;
+  transition: all .15s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+}
+
+.rank-item:hover {
+  background: #eef1f4;
+}
+
+.rank-item input {
+  display: none;
+}
+
+.rank-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.rank-item.top5 .rank-num {
+  background: #ffd43b;
+}
+
+.rank-item.bottom5 .rank-num {
+  background: #ffa8a8;
+}
+
+.artist-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #ddd;
+}
+
+.rank-name {
+  flex-grow: 1;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+</style>
+
+<h2 class="mb-3">🤢 Classifica finale: la tua previsione fallimentare</h2>
+<p class="text-muted">Allora, è semplice: clicca su ☰ e vedi di trascinare gli artisti nell’ordine che vuoi.<br>
+  Nella libertà.</p>
+<p class="text-muted"></p>
+<p class="text-muted">Una volta fatto, salva usando il bottone in basso.</p>
+
+{% if closed %}
+<div class="alert alert-warning">
+  Vedi che è scaduto il tempo e le previsioni sono chiuse, puoi solo visualizzare.<br>
+  Tanto avresti perso lo stesso
+</div>
+{% endif %}
+
+<form method="POST">
+
+<div id="ranking" class="ranking-grid">
+{% for p in participants | default([]) %}
+  <div class="rank-item" data-id="{{ p.id }}">
+    <div class="rank-num"></div>
+    <div class="rank-name">{{ p.name }}</div>
+    <div class="drag-handle">☰</div>
+
+    <img class="artist-photo"
+        src="{{ url_for('static', filename='images/artists/' ~ p.image) }}"
+        alt="{{ p.name }}">
+
+    <input type="hidden" name="order[]" value="{{ p.id }}">
+  </div>
+{% endfor %}
+</div>
+
+<hr>
+
+<h4>🏆 Premi</h4>
+<p class="text-muted">Allora, pure qua è semplice: ci sta un menù a tendina e scegli i premi.<br>
+  Una volta fatto, salva usando il bottone in basso.</p>
+
+
+
+<div class="row">
+  {% for label, field in [
+    ("Premio Critica 💬","critica"),
+    ("Sala Stampa 📰","stampa"),
+    ("Miglior Testo ✏️","testo"),
+    ("Miglior Composizione 🎹","composizione")
+  ] %}
+  <div class="col-md-6 mb-3">
+    <label class="form-label">{{ label }}</label>
+    <select name="{{ field }}" class="form-select" {% if closed %}disabled{% endif %}>
+      {% for p in participants | default([]) %}
+        <option value="{{ p.id }}"
+          {% if awards and awards[field ~ '_id'] == p.id %}selected{% endif %}
+        >
+          {{ p.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+  {% endfor %}
+</div>
+
+<button type="submit"
+        class="btn btn-primary btn-lg mt-3"
+        {% if closed %}disabled{% endif %}>
+  💾 Salva previsione, ma non ci sperare
+</button>
+
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+<script>
+function updateRanks() {
+  const items = document.querySelectorAll(".rank-item");
+
+  items.forEach((item, i) => {
+    const num = item.querySelector(".rank-num");
+    num.innerText = i + 1;
+
+    item.classList.remove("top5","bottom5");
+
+    if (i < 5) item.classList.add("top5");
+    if (i >= items.length - 5) item.classList.add("bottom5");
+  });
+}
+
+updateRanks();
+
+new Sortable(document.getElementById("ranking"), {
+  animation: 200,
+  disabled: {{ 'true' if closed else 'false' }},
+  onSort: updateRanks
+});
+</script>
+
+{% endblock %}
+
+

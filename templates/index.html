@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Fantafalliti{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+  <div class="hero-text">
+    <h1>🎤 Fantafalliti 2026</h1>
+
+    <p class="hero-subtitle">
+      Un altro Sanremo di merda, <br>
+      falliamo insieme.
+    </p>
+
+    <div class="hero-actions">
+      <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+        ☠️ Registrati ora
+      </a>
+
+      <a href="{{ url_for('login') }}" class="hero-login">
+        Hai già un account? Login →
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-image">
+    <img src="{{ url_for('static', filename='images/FFA_cover.jpg') }}" alt="IMMAGINE">
+  </div>
+
+</section>
+
+
+<section class="features mt-4">
+
+  <div class="card feature-card" onclick="toggleCard(this)">
+    <div class="feature-header">
+      <h3>🤔 Classifiche</h3>
+      <svg class="toggle-icon" viewBox="0 0 24 24" width="22" height="22">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+    </div>
+    <p class="feature-text">
+      Segui con perplessità l’andamento di Sanremo e scopri chi perde, oltre te.
+    </p>
+  </div>
+
+  <div class="card feature-card" onclick="toggleCard(this)">
+    <div class="feature-header">
+      <h3>🤮 Duetti</h3>
+      <svg class="toggle-icon" viewBox="0 0 24 24" width="22" height="22">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+    </div>
+    <p class="feature-text">
+      Una delle notti più belle dell'anno. Figurati le altre.
+    </p>
+  </div>
+
+  <div class="card feature-card" onclick="toggleCard(this)">
+    <div class="feature-header">
+      <h3>😨 Premi</h3>
+      <svg class="toggle-icon" viewBox="0 0 24 24" width="22" height="22">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+    </div>
+    <p class="feature-text">
+      Punti bonus, penalità e colpi di scena.
+    </p>
+  </div>
+
+</section>
+
+
+<style>
+  .feature-card {
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+  }
+
+  .feature-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .toggle-icon {
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    fill: none;
+    transition: transform 0.35s ease;
+  }
+
+  .feature-text {
+    display: none;
+    margin-top: 0.75rem;
+  }
+
+  .feature-card.open .feature-text {
+    display: block;
+  }
+
+  /* + diventa × */
+  .feature-card.open .toggle-icon {
+    transform: rotate(45deg);
+  }
+</style>
+
+
+<script>
+  function toggleCard(card) {
+    card.classList.toggle("open");
+  }
+</script>
+
+
+<p class="credits">
+  Credits to
+  <a href="https://www.instagram.com/piellequadro/" target="_blank">
+    piellequadro 🪐
+  </a>
+</p>
+
+{% endblock %}
+

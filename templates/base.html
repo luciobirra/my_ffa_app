@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}FantaFalliti{% endblock %}</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-black shadow-sm px-3">
+  <div class="container-fluid">
+
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
+      🚀 FFA – FantaFallitiApp
+    </a>
+
+    <!-- Right side -->
+    <div class="d-flex align-items-center ms-auto gap-2">
+
+      {% if current_user.username %}
+      
+        <!-- Avatar -->
+        {% if current_user.avatar %}
+          <img
+            src="{{ url_for('static', filename='avatars/' ~ current_user.avatar) }}"
+            alt="Avatar"
+            class="user-avatar-img"
+          >
+        {% else %}
+          <div class="user-avatar">
+            {{ current_user.username[0]|upper }}
+          </div>
+        {% endif %}
+
+
+        <!-- Username -->
+        <span class="fw-bold text-light me-2">
+          {{ current_user.username }}
+        </span>
+
+        <!-- Role-based link -->
+        {% if current_user.role == "admin" %}
+          <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light btn-sm">
+            Admin
+          </a>
+        {% else %}
+          <a href="{{ url_for('profile') }}" class="btn btn-outline-light btn-sm">
+            👤 Profilo
+          </a>
+
+        {% endif %}
+
+        <!-- Logout -->
+        <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">
+          Logout
+        </a>
+
+      {% else %}
+
+        <!-- Guest -->
+        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm">
+          Login
+        </a>
+
+        <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">
+          Registrati
+        </a>
+
+      {% endif %}
+
+    </div>
+  </div>
+</nav>
+
+<!-- INFO PREVISIONI APRTE/CHIUSE -->
+{% if current_user.username and current_user.role != "admin" and app_settings %}
+  <div class="alert alert-info text-center">
+    {% if app_settings.predictions_open %}
+      🟢 Previsioni aperte. <br>
+      Puoi fare le tue previsioni sbagliate, fino a 🕒 <strong> 28 febbraio · ore 20:23 </strong> <br>
+      Non puoi ancora vedere le previsioni degli altri.
+    {% else %}
+      🔴 Previsioni chiuse. Non puoi più modificare nulla. <br>
+      il DA ti ha però concesso di accedere alla classifica FFA 2026. <br>
+      <strong>Ringrazialo</strong>
+    {% endif %}
+  </div>
+{% endif %}
+
+<!-- 🔔 FLASH MESSAGES -->
+<div class="container mt-3">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>
+
+
+
+
+<div class="container my-4">
+  {% block content %}{% endblock %}
+</div>
+
+<!-- Bootstrap JS (necessario per chiudere gli alert) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+

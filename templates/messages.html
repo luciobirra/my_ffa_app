@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block title %}Messaggi{% endblock %}
+{% block content %}
+
+<style>
+/* riuso lo stile dashboard */
+.menu-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  text-decoration: none;
+  background: #0d6efd;
+  color: white;
+  font-size: 1rem;
+  text-align: center;
+  transition: .2s;
+}
+.menu-btn:hover {
+  background: #0b5ed7;
+  color: white;
+}
+
+.card {
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+
+.card-title-center {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+  position: relative;
+}
+.card-title-center::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #0d6efd, #ff5722);
+  margin: 8px auto 0;
+  border-radius: 3px;
+}
+
+.message-box {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.my-message {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
+
+.message-meta {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.emoji-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+  font-size: 1.6rem;
+}
+
+.anni {
+  margin: 0 10px;
+  font-weight: 800;
+  color: #ffc107;
+  text-shadow: 0 0 6px rgba(255,193,7,.5);
+}
+
+/* CARD SCROLLABILE */
+.message-card {
+  height: 65vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-scroll {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+  display: flex;
+  flex-direction: column-reverse; /* 👈 QUESTA È LA CHIAVE */
+}
+
+/* scrollbar carina */
+.messages-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.messages-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+.messages-scroll::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 8px;
+}
+.messages-scroll::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+</style>
+
+<h2 class="mb-3 text-center">📨 Bacheca fallita</h2>
+
+<p class="text-center fw-bold">
+  Qui puoi scrivere. Il DA ti giudica. E cancella.
+</p>
+
+<p class="emoji-line">
+  🍋 <strong class="anni">10 ANNI</strong> 🍋
+  
+</p>
+
+
+<div class="row justify-content-center">
+  <div class="col-md-8">
+
+    <!-- SCRITTURA MESSAGGIO -->
+    <div class="card p-3 mb-4">
+      <h5 class="card-title-center">✍️ Scrivi un messaggio</h5>
+
+      <form method="POST">
+        <input
+          type="text"
+          name="content"
+          class="form-control mb-2"
+          placeholder="Sputa il tuo pensiero..."
+          required
+        >
+        <button type="submit" class="menu-btn">
+          Invia messaggio
+        </button>
+      </form>
+    </div>
+
+    <!-- LISTA MESSAGGI SCROLLABILE -->
+    <div class="card p-3 message-card">
+      <h5 class="card-title-center">no dici, dici</h5>
+
+      <div class="messages-scroll">
+        {% if messages %}
+          {% for m in messages %}
+            <div class="message-box {% if m.user_id == current_user.id %}my-message{% endif %}">
+              
+              <!-- AVATAR -->
+              <img
+                src="{{ url_for('static', filename='avatars/' ~ (m.user.avatar if m.user.avatar else 'default.png')) }}"
+                alt="avatar"
+                width="48"
+                height="48"
+                style="border-radius: 50%; object-fit: cover;"
+              >
+
+              <!-- CONTENUTO -->
+              <div class="flex-grow-1">
+                <div>
+                  <strong>{{ m.user.username }}</strong>
+                  <span class="message-meta">
+                    · {{ m.created_at.strftime("%d/%m %H:%M") }}
+                  </span>
+                </div>
+
+                <div>{{ m.content }}</div>
+
+                {% if current_user.role == "admin" %}
+                  <form
+                    method="POST"
+                    action="{{ url_for('delete_message', message_id=m.id) }}"
+                    class="mt-1"
+                  >
+                    <button class="btn btn-sm btn-outline-danger">
+                      ❌ Cancella
+                    </button>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-center text-muted">
+            Nessuno ha ancora avuto il coraggio di scrivere.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="menu-btn mt-3">
+      ⬅ Torna alla dashboard
+    </a>
+
+  </div>
+</div>
+
+
+
+
+<!-- auto-scroll all'ultimo messaggio -->
+<script>
+  const box = document.querySelector('.messages-scroll');
+  if (box) box.scrollTop = box.scrollHeight;
+</script>
+
+{% endblock %}
+
+
+
+
+

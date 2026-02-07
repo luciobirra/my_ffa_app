@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Modifica Utente{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Modifica Utente</h1>
+
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Username</label>
+    <input type="text" name="username" value="{{ user.username }}" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" name="email" value="{{ user.email }}" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Nuova Password (lascia vuoto se non vuoi cambiare)</label>
+    <input type="password" name="password" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Ruolo</label>
+    <select name="role" class="form-select">
+      <option value="user" {% if user.role=="user" %}selected{% endif %}>User</option>
+      <option value="admin" {% if user.role=="admin" %}selected{% endif %}>Admin</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Salva modifiche</button>
+  <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Annulla</a>
+</form>
+{% endblock %}

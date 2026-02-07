@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}Risultati ufficiali{% endblock %}
+{% block content %}
+
+<style>
+.sortable-list .list-group-item {
+  cursor: grab;
+  background-color: #ffffff;
+  color: #212529;
+}
+
+.sortable-list .drag-handle {
+  cursor: grab;
+  font-size: 1.2rem;
+  opacity: 0.6;
+}
+
+.sortable-list .artist-name {
+  font-weight: 500;
+  color: #212529;
+}
+</style>
+
+<a href="{{ url_for('admin_dashboard') }}" class="back-link">
+  ← Ritorna al pannello admin
+</a>
+
+<h1 class="text-center">🛠️ Centro di controllo</h1>
+<p class="text-center text-muted">
+  Gestione risultati ufficiali
+</p>
+
+<!-- ================= STATO PREVISIONI ================= -->
+<div class="card mt-4 p-3">
+  <h3 class="text-center">🔐 Stato previsioni</h3>
+
+  <p class="text-center fw-bold">
+    Attualmente:
+    <span style="color: {% if settings.predictions_open %}green{% else %}red{% endif %};">
+      {% if settings.predictions_open %}APERTE{% else %}CHIUSE{% endif %}
+    </span>
+  </p>
+
+  <div class="text-center">
+    <a href="{{ url_for('toggle_predictions') }}" class="btn btn-secondary">
+      Cambia stato
+    </a>
+  </div>
+</div>
+
+<form method="POST" class="mt-4">
+
+  <!-- ================= CLASSIFICA PRINCIPALE ================= -->
+  <div class="card mt-4 p-3">
+    <h3 class="text-center">🏆 Classifica principale</h3>
+
+    <ul id="main" class="list-group sortable-list mt-3">
+      {% for p in participants %}
+        <li class="list-group-item d-flex align-items-center" data-id="{{ p.id }}">
+          <strong class="me-3">{{ loop.index }}.</strong>
+          <span class="flex-grow-1 artist-name">{{ p.name }}</span>
+          <span class="drag-handle">☰</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- ================= PREMI ================= -->
+  <div class="card mt-4 p-3">
+    <h3 class="text-center">🏅 Premi ufficiali</h3>
+
+    {% for label, field in [
+      ("Premio Critica","critica"),
+      ("Sala Stampa","stampa"),
+      ("Miglior Testo","testo"),
+      ("Miglior Composizione","composizione")
+    ] %}
+      <div class="mb-3">
+        <label class="form-label">{{ label }}</label>
+        <select name="{{ field }}" class="form-select">
+          {% for p in participants %}
+            <option value="{{ p.id }}"
+              {% if award and award[field ~ '_id'] == p.id %}selected{% endif %}
+            >
+              {{ p.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- ================= DUETTI ================= -->
+  <div class="card mt-4 p-3">
+    <h3 class="text-center">🎤 Serata Duetti – Top 5</h3>
+
+    <ul id="duets" class="list-group sortable-list mt-3">
+      {% for d in duets %}
+        <li class="list-group-item d-flex align-items-center" data-id="{{ d.id }}">
+          <strong class="me-3">{{ loop.index }}.</strong>
+          <span class="flex-grow-1 artist-name">{{ d.name }}</span>
+          <span class="drag-handle">☰</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- ================= CTA ================= -->
+  <div class="text-center mt-4">
+    <button class="btn btn-danger btn-lg">
+      🚨 Pubblica tutti i risultati ufficiali
+    </button>
+  </div>
+
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+new Sortable(main, { animation: 150, handle: ".drag-handle" });
+new Sortable(duets, { animation: 150, handle: ".drag-handle" });
+
+document.querySelector("form").addEventListener("submit", function () {
+
+  // rimuove input vecchi (sicurezza)
+  document
+    .querySelectorAll("input[name='main_order[]'], input[name='duet_order[]']")
+    .forEach(i => i.remove());
+
+  // classifica principale
+  document.querySelectorAll("#main li").forEach(li => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "main_order[]";
+    input.value = li.dataset.id;
+    this.appendChild(input);
+  });
+
+  // duetti
+  document.querySelectorAll("#duets li").forEach(li => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "duet_order[]";
+    input.value = li.dataset.id;
+    this.appendChild(input);
+  });
+});
+</script>
+
+{% endblock %}
+
+

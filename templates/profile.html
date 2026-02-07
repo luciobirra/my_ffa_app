@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Profilo{% endblock %}
+
+{% block content %}
+<!-- BACK TO DASHBOARD -->
+<a href="{{ url_for('dashboard') }}" class="back-link">
+  ← Ritorna alla dashboard
+</a>
+
+<h4 class="mb-3">👤 Impostazioni profilo</h4>
+
+<div class="profile-box mt-3">
+
+  <h6>Puoi modificare le tue credenziali e aggiornare l'immagine di profilo</h6>
+
+  {% if current_user.avatar %}
+  <img
+    src="{{ url_for('static', filename='avatars/' ~ current_user.avatar) }}"
+    class="mb-3"
+    style="width:80px;height:80px;border-radius:50%;object-fit:cover;"
+  >
+  {% endif %}
+
+
+
+  <form method="POST" enctype="multipart/form-data">
+
+    <!-- AVATAR -->
+    <div class="mb-3">
+      <label class="form-label">
+        🖼️ Avatar <span class="text-muted">(opzionale)</span>
+      </label>
+
+      <input
+        type="file"
+        name="avatar"
+        accept="image/png,image/jpeg"
+        class="form-control"
+      >
+
+      <div class="form-text">
+        📏 Formati consentiti: JPG / PNG · Dimensione massima: <strong>1 MB</strong><br>
+        🔁 Lascia vuoto per mantenere l’avatar attuale
+      </div>
+    </div>
+
+
+    <input
+      type="text"
+      name="username"
+      value="{{ current_user.username }}"
+      class="form-control mb-2"
+    >
+
+    <input
+      type="email"
+      name="email"
+      value="{{ current_user.email }}"
+      class="form-control mb-2"
+    >
+
+    <input
+      type="password"
+      name="password"
+      placeholder="Nuova password"
+      class="form-control mb-2"
+    >
+
+    <button class="btn btn-outline-warning">
+      ✏️ Aggiorna
+    </button>
+
+    <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary ms-2">
+      Logout
+    </a>
+  </form>
+</div>
+
+{% endblock %}
+
+

@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<style>
+.menu-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  background: #0d6efd;
+  color: white;
+  font-size: 1.1rem;
+  text-align: center;
+  transition: .2s;
+}
+.menu-btn:hover {
+  background: #0b5ed7;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.menu-btn-ranking {
+  background: linear-gradient(135deg, #ff9800, #ff5722);
+  box-shadow: 0 6px 14px rgba(255, 87, 34, 0.35);
+  font-weight: 600;
+}
+
+.card {
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 26px rgba(0,0,0,.12);
+}
+
+.player-me {
+  background: #dbeafe;
+  font-weight: bold;
+}
+
+.card-title-center {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+  position: relative;
+}
+.card-title-center::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #0d6efd, #ff5722);
+  margin: 8px auto 0;
+  border-radius: 3px;
+}
+
+.rules-box {
+  background: #eef5ff;
+  border: 1px solid #d0e2ff;
+  border-radius: 16px;
+}
+
+.profile-box {
+  background: #fff3e0;
+  border: 1px solid #ffe0b2;
+  border-radius: 16px;
+  padding: 14px;
+  font-size: 0.85rem;
+}
+.profile-box h6 {
+  font-size: 0.8rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: #e65100;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.emoji-line {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0;
+  font-size: 1.6rem;
+}
+</style>
+
+<h2 class="mb-3 text-center">👁️‍🗨️🌀 FANTAFALLITI 2026 🌀👁️‍🗨️</h2>
+
+<p class="text-center fw-bold">
+  edizione a cura del dittatore artistico:
+  <a href="https://www.instagram.com/an_gelo.18/" target="_blank">
+    an_gelo.18
+  </a>
+</p>
+
+<p class="emoji-line">
+  <span>💀🔥</span><span>💀🔥</span><span>💀🔥</span><span>💀🔥</span>
+</p>
+
+<a href="{{ url_for('messages') }}" class="menu-btn">
+  📨 Messaggi
+  {% if has_new_messages %}
+    <span class="badge bg-danger ms-2">NUOVI</span>
+  {% endif %}
+</a>
+
+<div class="row g-3">
+
+  <!-- GIOCA -->
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h5 class="card-title-center"><span>🤖</span> Qui è dove si gioca. <br>
+      E si fallisce</h5>
+
+      <a href="{{ url_for('prediction') }}" class="menu-btn">
+        Classifica & Premi
+      </a>
+
+      <a href="{{ url_for('duets') }}" class="menu-btn">
+        Serata Duetti
+      </a>
+
+      <a href="{{ url_for('ranking') }}" class="menu-btn menu-btn-ranking">
+        🥇🥈🥉💩 Classifica dei fantafalliti
+      </a>
+    </div>
+  </div>
+
+  <!-- GIOCATORI -->
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h5 class="card-title-center">🤡 Questi sono gli altri giocatori falliti come te</h5>
+      <ul class="list-group list-group-flush">
+        {% for p in players | default([]) %}
+        <li class="list-group-item {% if current_user and p.id == current_user.id %}player-me{% endif %}">
+          {{ p.username }}
+          {% if current_user and p.id == current_user.id %}
+            (tu)
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- REGOLE -->
+<div class="card p-3 mt-4 rules-box">
+  <h5 class="card-title-center"> Queste sono le regole.
+    <p> Non ti sognare di contestarle: o queste o te ne vai. <br>
+    Soprattutto: paga i 10 euro al DA .</p>
+   <span>💥</span>
+  </h5>
+  
+
+  <div class="row">
+
+    <div class="col-md-6">
+      <strong>🏆 Quanto valgono le posizioni della classifica finale, sempre se le azzecchi </strong>
+      <ul>
+        <li>1° → 40</li>
+        <li>2° → 30</li>
+        <li>3° → 25</li>
+        <li>4° → 16</li>
+        <li>5° → 8</li>
+        <li>6°–30° → 2.5</li>
+      </ul>
+    </div>
+
+    <div class="col-md-6">
+      <strong>🤮 Quanto valgono le posizioni della classifica dei duetti</strong>
+      <ul>
+        <li>1° → 25</li>
+        <li>2° → 20</li>
+        <li>3° → 16</li>
+        <li>4° → 11</li>
+        <li>5° → 8</li>
+        <li>6° ... 30° → 0</li>
+      </ul>
+    </div>
+
+
+  
+
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-6">
+      <strong>🎯 Esistono anche un Bonus e un Malus per la classifica finale</strong>
+      <ul>
+        <li>BONUS Bugo 👻: 3 su 5 nei Top 5 → +25</li>
+        <li>MALUS Morgan 👽: Meno di 3 su 5 nei Last 5 → −20</li>
+      </ul>
+    </div>
+
+   
+   
+    <div class="col-md-6">
+      <strong>😷 Se azzecchi i premi tipo: 'premio della critica', 'sala stampa' e poi gli altri che non mi ricordo</strong>
+      <ul>
+        <li>Critica → 14</li>
+        <li>Sala Stampa → 14</li>
+        <li>Testo → 14</li>
+        <li>Composizione → 14</li>
+      </ul>
+    </div>
+
+    
+
+  </div>
+</div>
+
+
+<p class="credits">Credits to
+    <a href="https://www.instagram.com/piellequadro/" target="_blank">piellequadro 🪐 </a>
+</p>
+
+
+{% endblock %}
+

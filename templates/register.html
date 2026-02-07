@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Registrazione{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Registrazione</h1>
+
+<form method="POST" action="/register" enctype="multipart/form-data">
+
+  <div class="mb-3">
+    <label class="form-label">Username (scegli il nome della tua squadra di falliti)</label>
+    <input type="text" name="username" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Email (metti una email a caso. L'importante è che hai pagato per giocare)</label>
+    <input type="email" name="email" class="form-control" required>
+  </div>
+
+  <!-- AVATAR -->
+  <div class="mb-3">
+    <label class="form-label">
+      🖼️ Avatar <span class="text-muted">(opzionale, ma consigliato)</span>
+    </label>
+
+    <input
+      type="file"
+      name="avatar"
+      accept="image/png,image/jpeg"
+      class="form-control"
+    >
+
+    <div class="form-text">
+      📏 Formati consentiti: JPG / PNG · Dimensione massima: <strong>1 MB</strong>
+    </div>
+  </div>
+
+
+  <div class="mb-3">
+    <label class="form-label">Password (non ci stanno criteri strani)</label>
+    <input type="password" name="password" class="form-control" required>
+  </div>
+
+  <button type="submit" class="btn btn-success">Registrati</button>
+  <a href="/login" class="btn btn-link">Hai già un account?</a>
+
+</form>
+
+{% endblock %}

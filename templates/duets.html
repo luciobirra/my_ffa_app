@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Serata Duetti{% endblock %}
+{% block content %}
+
+<!-- BACK TO DASHBOARD -->
+<a href="{{ url_for('dashboard') }}" class="back-link">
+  ← Ritorna alla dashboard
+</a>
+
+<style>
+.ranking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: repeat(10, auto);
+  grid-auto-flow: column;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .ranking-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+  }
+}
+
+.rank-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f8f9fa;
+  cursor: grab;
+  transition: all .15s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,.25);
+}
+
+.rank-item:hover {
+  background: #eef1f4;
+}
+
+.rank-item input {
+  display: none;
+}
+
+.rank-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.rank-item.top5 .rank-num {
+  background: #ffd43b;
+}
+
+.rank-name {
+  flex-grow: 1;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.drag-handle {
+  cursor: grab;
+  opacity: 0.6;
+}
+
+.duet-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #ddd;
+}
+
+</style>
+
+<h2 class="mb-3">🤮 Serata Duetti: la tua previsione fallimentare</h2>
+<p class="text-muted">Allora, non è difficile: clicca su ☰ e trascina per scegliere la tua Top 5.<br>
+  Però tieni presente che solamente i primi 5 duetti di merda contano.</p>
+<p class="text-muted"></p>
+<p class="text-muted">Una volta fatto, salva usando il bottone in basso.</p>
+
+
+{% if closed %}
+<div class="alert alert-warning">
+  Vedi che è scaduto il tempo e le previsioni sono chiuse, puoi solo visualizzare.<br>
+  Tanto avresti perso lo stesso
+</div>
+{% endif %}
+
+<form method="POST">
+
+  <div id="ranking" class="ranking-grid">
+    {% for d in duets %}
+      <div class="rank-item" data-id="{{ d.id }}">
+        <div class="rank-num"></div>
+        <div class="rank-name">{{ d.name }}</div>
+        <div class="drag-handle">☰</div>
+        
+        <img class="duet-photo"
+             src="{{ url_for('static', filename='images/duets/' ~ d.image) }}"
+             alt="{{ d.name }}">
+
+        <input type="hidden" name="order[]" value="{{ d.id }}">
+      </div>
+    {% endfor %}
+  </div>
+
+  <button class="btn btn-primary btn-lg mt-3" {% if closed %}disabled{% endif %}>
+    💾 Salva previsione, ma non ci sperare
+  </button>
+
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+<script>
+function updateRanks() {
+  const items = document.querySelectorAll(".rank-item");
+
+  items.forEach((item, i) => {
+    const num = item.querySelector(".rank-num");
+    num.innerText = i + 1;
+    item.classList.toggle("top5", i < 5);
+  });
+}
+
+updateRanks();
+
+new Sortable(document.getElementById("ranking"), {
+  animation: 200,
+  disabled: {{ 'true' if closed else 'false' }},
+  onSort: updateRanks
+});
+</script>
+
+{% endblock %}
+
+
