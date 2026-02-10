@@ -47,11 +47,11 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 # max upload: 1 MB
-app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024
+app.config["MAX_CONTENT_LENGTH"] = 4 * 1024 * 1024
 
 @app.errorhandler(RequestEntityTooLarge)
 def handle_file_too_large(e):
-    flash("❌ Avatar troppo grande. Dimensione massima: 1 MB. Operazione non effettuata.", "error")
+    flash("❌ Avatar troppo grande. Dimensione massima: 4 MB. Operazione non effettuata.", "error")
     return redirect(request.referrer or url_for("dashboard"))
 
 # =====================================================
