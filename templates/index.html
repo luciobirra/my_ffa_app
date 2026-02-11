@@ -6,11 +6,10 @@
 <section class="hero">
 
   <div class="hero-text">
-    <h1>🎤 Fantafalliti 2026</h1>
+    <h1>🪩 Fantafalliti 2026 🪩</h1>
 
     <p class="hero-subtitle">
-      Un altro Sanremo di merda, <br>
-      falliamo insieme.
+      Un altro Sanremo di merda: falliamo insieme.
     </p>
 
     <div class="hero-actions">
@@ -42,7 +41,7 @@
       </svg>
     </div>
     <p class="feature-text">
-      Segui con perplessità l’andamento di Sanremo e scopri chi perde, oltre te.
+      Segui con perplessità l’andamento di questo Sanremo e scopri che abbiamo tutti perso.
     </p>
   </div>
 
@@ -68,12 +67,113 @@
       </svg>
     </div>
     <p class="feature-text">
-      Punti bonus, penalità e colpi di scena.
+      Punti bonus, penalità e colpi di scena. Sempre se non vieni espulso dal dittatore artistico.
     </p>
   </div>
 
 </section>
 
+
+  <!-- NUOVE CARD FULL WIDTH -->
+<section class="features mt-4">
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card feature-card full-card" onclick="toggleCard(this)">
+        <div class="feature-header">
+          <h3>📜 Editto Pre-Festival</h3>
+          <svg class="toggle-icon" viewBox="0 0 24 24" width="22" height="22">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </div>
+
+        <div class="feature-text">
+
+          <h5>FantaFalliti-2026<br>EDITTO PRE-FESTIVAL</h5>
+
+          <p><strong>Esiste solo una regola:</strong> il dittatore artistico fa le regole. O questo, o te ne vai.</p>
+
+          <h6 class="mt-3">Modalità di iscrizione</h6>
+          <ul>
+            <li>L’iscrizione è possibile unicamente mediante la App FantaFalliti (questa App)</li>
+            <li>Il termine ultimo per le iscrizioni è il 18 febbraio</li>
+            <li>L’iscrizione verrà ritenuta valida previa ricezione della quota entro il 20 febbraio</li>
+            <li>La quota va inviata tramite PayPal/Satispay al dittatore artistico</li>
+            <li>Specificare se si partecipa a entrambe le competizioni</li>
+            <li>Quota di iscrizione: 15€ a persona</li>
+          </ul>
+
+          <h6 class="mt-3">Regole di partecipazione</h6>
+          <ul>
+            <li>È necessario partecipare in maniera proattiva almeno a 3 serate su 5</li>
+            <li>La partecipazione è considerara proattiva se il concorrente interagisce per almeno 2 ore per ogni serata (fatta eccezione per quelle in cui risulta assente)</li>
+            <li>La partecipazione alla finale (in presenza o da remoto) è obbligatoria</li>
+            <li>L’ assenza va giustificata, certificandone il motivo al dittatore artistico privatamente o pubblicamente</li>
+            <li>Le classifiche dovranno essere inviate entro le data stabilita dal dittatore artistico e riportata nella App Fanta Falliti</li>
+            <li>Il mancato rispetto di anche solamente una delle regole di cui sopra sarà motivo di esclusione e squalifica</li>
+            <li>dittatore deciderà pubblicando l’editto di fine edizione dichiarando chi è stato squalificato e perché</li>
+            <li>La quota non verrà rimborsata per nessun motivo</li>
+          </ul>
+
+          <h6 class="mt-3">Pubblicazione graduatorie</h6>
+          <ul>
+            <li>Le graduatorie verranno pubblicate a tempo debito sull App FantaFalliti </li>
+            <li>Le graduatorie verranno suddivise per categoria di evento e concorso</li>
+            <li>I vincitori (Marghe - PayPal: marghemancuso@gmail.com) riceveranno il premio in denaro entro e non oltre domenica 1 marzo</li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<section class="features mt-4">
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card feature-card full-card" onclick="toggleCard(this)">
+        <div class="feature-header">
+          <h3>📜 Editto Post-Festival</h3>
+          <svg class="toggle-icon" viewBox="0 0 24 24" width="22" height="22">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </div>
+
+        <div class="feature-text">
+
+          <h5>FantaFalliti-2026<br>EDITTO POST-FESTIVAL</h5>
+
+          <p><strong>Esiste solo una regola:</strong> il dittatore artistico fa le regole. O questo, o te ne vai.</p>
+
+          <h6 class="mt-3">Il dittatore artistico decide che</h6>
+          <ul>
+            <li>...</li>
+            <li>...</li>
+          </ul>
+
+          <h6 class="mt-3">Il dittatore artistico altresì stabilisce che</h6>
+          <ul>
+            <li>...</li>
+            <li>...</li>
+          </ul>
+
+          <h6 class="mt-3">Espulsioni</h6>
+          <ul>
+            <li>...</li>
+            <li>...</li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
 
 <style>
   .feature-card {
@@ -113,6 +213,12 @@
   .feature-card.open .toggle-icon {
     transform: rotate(45deg);
   }
+
+  .hero-text {
+    text-align: center;
+  }
+
+  
 </style>
 
 
@@ -126,8 +232,9 @@
 <p class="credits">
   Credits to
   <a href="https://www.instagram.com/piellequadro/" target="_blank">
-    piellequadro 🪐
+    piellequadro 
   </a>
+  🪐
 </p>
 
 {% endblock %}
